@@ -14,48 +14,50 @@
 
 <body>
     <div class="container-fluid background">
-        <div class="container savedSearches">
-            <div class="searchArea">
-                <h3 class="text-center">Recipe Finder</h3>
-                <input type="text" class="searchByIngredient" Placeholder="Search by ingredient">
-                <button class="sbiBtn">Search</button>
-                <button class="advModalOpen">Adv Search</button>
-                    <!--Display of advanced search-->
-                    <div id="advModal" class="modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3>Advanced Search</h3>
-                                <span class="close">&times;</span> 
-                            </div>
-                            <div class="modal-body">
-                                <input id="ingredient1"><span> Ingredient 1</span>   
-                                <input id="ingredient2"><span> Ingredient 2</span> 
-                                <br>
-                                <br>
-                                <input id="ingredient3"><span> Ingredient 3</span> 
-                                <input id="ingredient4"><span> Ingredient 4</span> 
-                                <br>
-                                <br>
-                                <input id="ingredient5"><span> Ingredient 5</span> 
-                                <input id="ingredient6"><span> Ingredient 6</span> 
-                                <br>
-                                <br>
-                                <input id="numberOfResults"><span> Number of Results</span> <!--Turn into drop down list, select 1-10-->
-                            </div>
-                            <div class="modal-footer">
-                                <button class="advSearch">Search</button>
+        <div class="container recipeDisplayArea">
+            <div class="savedSearches">
+                <div class="searchArea">
+                    <h3 class="text-center">Recipe Finder</h3>
+                    <input type="text" class="searchByIngredient" Placeholder="Search by ingredient">
+                    <button class="sbiBtn">Search</button>
+                    <button class="advModalOpen">Adv Search</button>
+                        <!--Display of advanced search-->
+                        <div id="advModal" class="modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Advanced Search</h3>
+                                    <span class="close">&times;</span> 
+                                </div>
+                                <div class="modal-body">
+                                    <input id="ingredient1"><span> Ingredient 1</span>   
+                                    <input id="ingredient2"><span> Ingredient 2</span> 
+                                    <br>
+                                    <br>
+                                    <input id="ingredient3"><span> Ingredient 3</span> 
+                                    <input id="ingredient4"><span> Ingredient 4</span> 
+                                    <br>
+                                    <br>
+                                    <input id="ingredient5"><span> Ingredient 5</span> 
+                                    <input id="ingredient6"><span> Ingredient 6</span> 
+                                    <br>
+                                    <br>
+                                    <input id="numberOfResults"><span> Number of Results</span> <!--Turn into drop down list, select 1-10-->
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="advSearch">Search</button>
+                                </div>
                             </div>
                         </div>
+                        <!--End of advanced search display-->
+                    <br>
+                    <br>
+                    <input type="text" class="searchByRecipe" Placeholder="Search by recipe">
+                    <button class="sbrBtn">Search</button>
+                    <br>
+                    <br>
+                    <div class="random text-center">
+                        <button class="randomBtn">Random Recipe!</button>
                     </div>
-                    <!--End of advanced search display-->
-                <br>
-                <br>
-                <input type="text" class="searchByRecipe" Placeholder="Search by recipe">
-                <button class="sbrBtn">Search</button>
-                <br>
-                <br>
-                <div class="random text-center">
-                    <button class="randomBtn">Random Recipe!</button>
                 </div>
             </div>
         </div>

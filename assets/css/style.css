@@ -49,3 +49,12 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.recipeDisplay {
+    padding: 10px;
+    max-width: 960px;
+    margin: 0 auto;
+    margin-top: 5%;
+    overflow: auto;
+    border: 1px solid black;
+}

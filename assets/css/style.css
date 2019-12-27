@@ -54,7 +54,10 @@
     padding: 10px;
     max-width: 960px;
     margin: 0 auto;
-    margin-top: 5%;
     overflow: auto;
     border: 1px solid black;
+}
+
+#pastSearchBtn:hover, #shoppingCart:hover, #pastSearchBtn:focus, #shoppingCart:focus {
+    text-decoration: none;
 }

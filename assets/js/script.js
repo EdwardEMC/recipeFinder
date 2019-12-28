@@ -178,15 +178,30 @@ $(document).ready(() => {
         let title = $("<h3>").text(searchData.title);
         let information = $("<p>").html("Preparation: " + searchData.preparationMinutes + " minutes" + "<br/>" + "Cooking time: " + searchData.cookingMinutes + " minutes" + "<br/>" + "Servings: " + searchData.servings);
         let ingredients = $("<h3>").text("Ingredients");
+        let exportBtn = $("<button>").text("Add");
         let ingList = $("<ul>");
         let instructions = $("<h3>").text("Instructions");
         let instList = $("<p>").text(searchData.instructions);
 
-        img.attr("src", searchData.image);
-        img.attr("alt", "Recipe Image");
-        img.attr("style", "float:right; margin:0 10px 10px 0; max-width:400px; max-height:300px;");
+        exportBtn.attr({
+            class: "exportIngredients btn btn-sm btn-success",
+            style: "margin-left:10px;"
+        });
+
+        img.attr({
+            src: searchData.image,
+            alt: "Recipe Image",
+            style: "float:right; margin:0 10px 10px 0; max-width:400px; max-height:300px;"
+        });
+
+        //alternative to the object model above --- keep for future reference
+        // img.attr("src", searchData.image);
+        // img.attr("alt", "Recipe Image");
+        // img.attr("style", "float:right; margin:0 10px 10px 0; max-width:400px; max-height:300px;");
     
         ingredientList(response, ingList);
+
+        ingredients.append(exportBtn);
         div.append(img, title, information, ingredients, ingList, instructions, instList);
         display.append(div);
     }
@@ -196,7 +211,10 @@ $(document).ready(() => {
         searchCheck(response);
         let res = searchData.extendedIngredients;
         for(x=0; x<res.length; x++) {
-            let li = $("<li>").text(res[x].name + " - " + res[x].amount + " " + res[x].unit);
+            let li = $("<li>").attr("style", "list-style-type:none;");
+            let checkbox = $("<input>").attr({type:"checkbox"});
+            let text = $("<label>").text(res[x].name + " - " + res[x].amount + " " + res[x].unit);
+            li.append(checkbox, text);
             ingList.append(li);
         }
         return ingList;

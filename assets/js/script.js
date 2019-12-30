@@ -10,6 +10,7 @@ $(document).ready(() => {
     const display = $(".recipeDisplayArea");
     const random = $(".randomBtn");
     const pastSearch = $("#pastSearchBtn");
+    const shoppingCart = $("#shoppingCart");
     
     //ajax request and button functions----------------------------------------------------------------------------------------
     //ajax function to finder recipe buttons and find id's for recipe information
@@ -100,16 +101,32 @@ $(document).ready(() => {
     saved.on("click", event => {
         let identification = event.target.value;
         let recipeName = event.target.innerText;
-        if(identification!==""&&identification!==undefined) {
+        if(identification!==""&&identification!==undefined&&identification!=="deleteBtn") {
             saveBtns(recipeName, identification);
             bAjax(identification);
         }
+        else if(identification==="deleteBtn") {
+            deleteBtn(event);
+        }
     });
 
-    //on click event for past searches
+    //on click event to display past searches
     pastSearch.on("click", () => {
-        display,saved.empty(); //does not clear recipe if one already loaded
+        display,saved.empty(); 
+        $(".recipeDisplay").remove();
         searchDisplay();
+    });
+
+    //on click event for Add button to see what ingredients are checked/unchecked
+    $(document).on("click", ".recipeDisplay .exportIngredients", () => {
+        exported();
+    });
+
+    //on click event for Shopping Cart
+    shoppingCart.on("click", () => {
+        display,saved.empty(); 
+        $(".recipeDisplay").remove();
+        shopping();
     });
 
     //displaying the results to the page----------------------------------------------------------------------------------------
@@ -130,11 +147,11 @@ $(document).ready(() => {
     //function to save recipes to local storage and check if it already exists
     const saveBtns = (recipeName, identification) => {
         let btns = [];
-        let y = 0;
-        while(localStorage.getItem("recipe"+y)) {
-            let key = JSON.parse(localStorage.getItem("recipe"+y));
-            btns.push(key.recipeName);
-            y++;
+        for(let x=0; x<parseInt(localStorage.getItem("recipeTracker")); x++) {
+            let key = JSON.parse(localStorage.getItem("recipe"+x));
+            if(key) {
+                btns.push(key.recipeName);
+            }
         }
         if(!btns.includes(recipeName)){
             recipeTracker();
@@ -193,11 +210,6 @@ $(document).ready(() => {
             alt: "Recipe Image",
             style: "float:right; margin:0 10px 10px 0; max-width:400px; max-height:300px;"
         });
-
-        //alternative to the object model above --- keep for future reference
-        // img.attr("src", searchData.image);
-        // img.attr("alt", "Recipe Image");
-        // img.attr("style", "float:right; margin:0 10px 10px 0; max-width:400px; max-height:300px;");
     
         ingredientList(response, ingList);
 
@@ -212,7 +224,10 @@ $(document).ready(() => {
         let res = searchData.extendedIngredients;
         for(x=0; x<res.length; x++) {
             let li = $("<li>").attr("style", "list-style-type:none;");
-            let checkbox = $("<input>").attr({type:"checkbox"});
+            let checkbox = $("<input>").attr({
+                type:"checkbox",
+                id: "cb"+x
+            });
             let text = $("<label>").text(res[x].name + " - " + res[x].amount + " " + res[x].unit);
             li.append(checkbox, text);
             ingList.append(li);
@@ -222,15 +237,78 @@ $(document).ready(() => {
 
     //function to display the past searches
     const searchDisplay = () => {
-        let y = 0;
-        while(localStorage.getItem("recipe"+y)) {
+        for(let y=0; y<parseInt(localStorage.getItem("recipeTracker")); y++) {
             let key = JSON.parse(localStorage.getItem("recipe"+y));
-            let button = $("<button>").text(key.recipeName);
-            let cancel = $("<button>").text("X");
-            button.val(key.identification);
-            cancel.attr("style", "background-color:red; color:black;");
-            saved.append(button,cancel);
-            y++;
+            if(key) {
+                let div = $("<div>");
+                let button = $("<button>").text(key.recipeName);
+                let cancel = $("<button>").text("X");
+
+                button.val(key.identification);
+                cancel.attr({
+                    style: "background-color:red; color:black; margin-left:5px;",
+                    id: "recipe"+y
+                });
+                cancel.val("deleteBtn");
+                div.attr("style", "margin-bottom:5px;");
+                div.append(button,cancel);
+                saved.append(div);
+            }
         }
     }
+
+    //function to delete past search recipes
+    const deleteBtn = event => {
+        let item = event.target.parentNode;
+        localStorage.removeItem(event.target.id);
+        item.remove();
+    }
+
+    //function to save exported ingredients
+    const exported = () => {
+        const shoppingList = [];
+        let x = 0;
+        while($("#cb"+x).length!==0){
+            let cb = $("#cb"+x);
+            if(cb[0].checked) {
+                let item = cb.parent()[0].innerText;
+                shoppingList.push(item.split(" -").shift());
+            }
+            x++;
+        }
+        $("#cartNumber").text(shoppingList.length);
+        //add something to add different recipe ingredients to the object instead of overwriting the first ones ??????????
+        if(shoppingList.length!==0) {
+            let recipeTitle = searchData.title;
+            let list = JSON.stringify({recipeTitle,shoppingList});
+            localStorage.setItem("shoppingList", list);
+        }
+    }
+
+    //function to display shopping list
+    const shopping = () => {
+        let list = JSON.parse(localStorage.getItem("shoppingList"));
+        let div = $("<div>").addClass("listDisplay");
+        let title = $("<h3>").text("Meal: " + list.recipeTitle);
+        let p = $("<p>").text("Ingredients to buy:");
+        div.append(title, p);
+        for(let x=0; x<list.shoppingList.length; x++) {
+            let li = $("<li>").text(list.shoppingList[x]);
+            div.append(li);
+        }
+        saved.append(div);
+        //add function to allow deletion of all items or just one ????????????
+    }
+
+    //function to display shopping cart item number
+    const cartNum = () => {
+        let list = JSON.parse(localStorage.getItem("shoppingList"));
+        if(list) {
+            $("#cartNumber").text(list.shoppingList.length);
+        }
+        else {
+            $("#cartNumber").text("0");
+        }
+    }
+    cartNum();
 });

@@ -82,7 +82,7 @@ $(document).ready(() => {
                 ingredients.push($("#ingredient"+x).val());
             }
         }
-        let resultNum = $("#numberOfResults").val(); //---change to drop down eventually
+        let resultNum = $("select").val(); //---change to drop down eventually
         let queryURL = "https://api.spoonacular.com/recipes/complexSearch?apiKey="+APIKey+"&includeIngredients="+ingredients+"&number="+resultNum+"&instructionsRequired=true&fillIngredients=true&addRecipeInformation=true";
         for(let x=1; x<7; x++) {
             $("#ingredient"+x).val("");     
@@ -101,7 +101,20 @@ $(document).ready(() => {
     saved.on("click", event => {
         let identification = event.target.value;
         let recipeName = event.target.innerText;
-        if(identification!==""&&identification!==undefined&&identification!=="deleteBtn") {
+        if(identification!==""&&
+        identification!==undefined&&
+        identification!=="deleteBtn"&&
+        identification!==" "&& //find a way to fix this mess
+        identification!=="1"&&
+        identification!=="2"&&
+        identification!=="3"&&
+        identification!=="4"&&
+        identification!=="5"&&
+        identification!=="6"&&
+        identification!=="7"&&
+        identification!=="8"&&
+        identification!=="9"&&
+        identification!=="10") {
             saveBtns(recipeName, identification);
             bAjax(identification);
         }
@@ -127,6 +140,24 @@ $(document).ready(() => {
         display,saved.empty(); 
         $(".recipeDisplay").remove();
         shopping();
+    });
+
+    //on click event for clearing shopping cart list
+    $(document).on("click",".savedSearches .listDisplay .clearList", () => {
+        localStorage.removeItem("shoppingList");
+        location.reload();
+    });
+
+    //on click event to clear all past searches/recipe tracker
+    $(document).on("click",".savedSearches .clearSearches", () => {
+        for(let y=0; y<parseInt(localStorage.getItem("recipeTracker")); y++) {
+            let key = JSON.parse(localStorage.getItem("recipe"+y));
+            if(key) {
+                localStorage.removeItem("recipe"+y);
+            }
+        }
+        localStorage.removeItem("recipeTracker");
+        location.reload();
     });
 
     //displaying the results to the page----------------------------------------------------------------------------------------
@@ -177,13 +208,16 @@ $(document).ready(() => {
     //function to display results as buttons
     const recipeButton = response => {
         searchCheck(response);
+        $(".buttonDisplayArea").remove();
+        let div = $("<div>").addClass("buttonDisplayArea");
         for(x=0; x<searchData.length; x++) {
             let button = $("<button>");
             button.text(searchData[x].title);
             button.val(searchData[x].id);
             button.attr("id", "button"+x);
-            saved.append(button);
+            div.append(button);
         }
+        saved.append(div);
     }
 
     //function to get the response data and display to page
@@ -237,6 +271,12 @@ $(document).ready(() => {
 
     //function to display the past searches
     const searchDisplay = () => {
+        if(localStorage.getItem("recipeTracker")) {
+            let button = $("<button>").addClass("clearSearches");
+            button.text("Clear All Searches");
+            button.attr("style", "margin-bottom:5px;");
+            saved.append(button);
+        }
         for(let y=0; y<parseInt(localStorage.getItem("recipeTracker")); y++) {
             let key = JSON.parse(localStorage.getItem("recipe"+y));
             if(key) {
@@ -288,16 +328,21 @@ $(document).ready(() => {
     //function to display shopping list
     const shopping = () => {
         let list = JSON.parse(localStorage.getItem("shoppingList"));
-        let div = $("<div>").addClass("listDisplay");
-        let title = $("<h3>").text("Meal: " + list.recipeTitle);
-        let p = $("<p>").text("Ingredients to buy:");
-        div.append(title, p);
-        for(let x=0; x<list.shoppingList.length; x++) {
-            let li = $("<li>").text(list.shoppingList[x]);
-            div.append(li);
-        }
-        saved.append(div);
+        if(list) {
+            let button = $("<button>").addClass("clearList");
+            let div = $("<div>").addClass("listDisplay");
+            let title = $("<h3>").text("Meal: " + list.recipeTitle);
+            let p = $("<p>").text("Ingredients to buy:");
+            button.text("Clear List");
+            div.append(button, title, p);
+            for(let x=0; x<list.shoppingList.length; x++) {
+                let li = $("<li>").text(list.shoppingList[x]);
+                li.val(x);
+                div.append(li);
+            }
+            saved.append(div);
         //add function to allow deletion of all items or just one ????????????
+        }
     }
 
     //function to display shopping cart item number

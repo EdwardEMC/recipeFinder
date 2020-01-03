@@ -99,22 +99,10 @@ $(document).ready(() => {
 
     //on click event for recipe buttons
     saved.on("click", event => {
+        let check = [" ", "1","2","3","3","4","5","6","7","8","9","10"];
         let identification = event.target.value;
         let recipeName = event.target.innerText;
-        if(identification!==""&&
-        identification!==undefined&&
-        identification!=="deleteBtn"&&
-        identification!==" "&& //find a way to fix this mess
-        identification!=="1"&&
-        identification!=="2"&&
-        identification!=="3"&&
-        identification!=="4"&&
-        identification!=="5"&&
-        identification!=="6"&&
-        identification!=="7"&&
-        identification!=="8"&&
-        identification!=="9"&&
-        identification!=="10") {
+        if(identification!==""&&identification!==undefined&&identification!=="deleteBtn"&&!check.includes(identification)) {
             saveBtns(recipeName, identification);
             bAjax(identification);
         }
@@ -234,6 +222,8 @@ $(document).ready(() => {
         let instructions = $("<h3>").text("Instructions");
         let instList = $("<p>").text(searchData.instructions);
 
+        div.attr("style", "margin-top:10px; background-color:white;");
+
         exportBtn.attr({
             class: "exportIngredients btn btn-sm btn-success",
             style: "margin-left:10px;"
@@ -274,7 +264,7 @@ $(document).ready(() => {
         if(localStorage.getItem("recipeTracker")) {
             let button = $("<button>").addClass("clearSearches");
             button.text("Clear All Searches");
-            button.attr("style", "margin-bottom:5px;");
+            button.attr("style", "margin-top:10px; margin-bottom:5px; margin-left:50%; transform:translateX(-50%);");
             saved.append(button);
         }
         for(let y=0; y<parseInt(localStorage.getItem("recipeTracker")); y++) {
@@ -334,12 +324,15 @@ $(document).ready(() => {
             let title = $("<h3>").text("Meal: " + list.recipeTitle);
             let p = $("<p>").text("Ingredients to buy:");
             button.text("Clear List");
-            div.append(button, title, p);
+            button.attr("style", "margin-bottom:5px; margin-left:50%; transform:translateX(-50%);");
+            div.attr("style", "margin-top:10px; margin-left:50%; transform:translateX(-50%); background-color:white; padding:10px;");
+            div.append(title, p);
             for(let x=0; x<list.shoppingList.length; x++) {
                 let li = $("<li>").text(list.shoppingList[x]);
                 li.val(x);
                 div.append(li);
             }
+            div.append(button);
             saved.append(div);
         //add function to allow deletion of all items or just one ????????????
         }

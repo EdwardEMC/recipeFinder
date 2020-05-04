@@ -18,3 +18,6 @@ Each saved search recipe has the ability to remove any selected one or the whole
 ![Shopping cart](/assets/images/cartSS.png?raw=true "Shopping cart") 
 
 Each recipe that is searched has the ability to add ingredients to the "Shopping Cart' which can be cleared with a separate button.
+
+# Deployed
+https://edwardemc.github.io/recipeFinder/
